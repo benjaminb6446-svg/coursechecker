@@ -73,21 +73,29 @@ st.markdown(f"""
         text-transform: uppercase;
     }}
 
-    /* FILE UPLOADER - Forced White Text for Drag/Drop and Browse */
+    /* FILE UPLOADER - REINFORCED WHITE TEXT */
     section[data-testid="stFileUploader"] {{
         background-color: {MAROON} !important;
         padding: 15px;
         border-radius: 4px;
     }}
     
-    /* Target "Drag and drop file here" and "Limit 200MB..." */
+    /* Targets "Drag and drop file here" and "Limit 200MB..." */
     section[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] p {{
         color: {WHITE} !important;
     }}
     
-    /* Target the "Browse files" button text specifically */
-    section[data-testid="stFileUploader"] button p {{
+    /* EXPLICITLY TARGETING BROWSE FILES TEXT */
+    section[data-testid="stFileUploader"] button div[data-testid="stMarkdownContainer"] p,
+    section[data-testid="stFileUploader"] button span,
+    section[data-testid="stFileUploader"] label {{
         color: {WHITE} !important;
+    }}
+
+    /* Targeting the button label specifically */
+    section[data-testid="stFileUploader"] button {{
+        color: {WHITE} !important;
+        border: 1px solid {WHITE} !important;
     }}
 
     /* Ensure dropdown/selectbox text is also white */
@@ -108,7 +116,7 @@ st.markdown(f"""
 
 # --- HEADER ---
 st.markdown('<p class="massive-title">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions
@@ -218,6 +226,7 @@ if uploaded_file and run_button:
 
         status_card.success(f"Complete. {found_count} matches identified.")
         
+        # Download results
         output = io.BytesIO()
         wb.save(output)
         output.seek(0)

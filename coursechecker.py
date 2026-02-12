@@ -18,62 +18,70 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- UCHICAGO BRANDING (Official Light Palette) ---
+# --- UCHICAGO BRANDING (Light Theme / Black Text) ---
 MAROON = "#800000"
 LIGHT_GREYSTONE = "#D9D9D9"
 GREYSTONE = "#A6A6A6"
 DARK_GREYSTONE = "#737373"
+BLACK = "#000000"
 
 st.markdown(f"""
     <style>
     /* Global Styles */
     .stApp {{
         background-color: #ffffff;
+        color: {BLACK};
+    }}
+    
+    /* Force all markdown text to Black */
+    .stMarkdown, p, li, span {{
+        color: {BLACK} !important;
     }}
     
     /* Header Styles */
     h1 {{
-        color: {MAROON};
+        color: {MAROON} !important;
         font-family: 'Crimson Text', serif;
         border-bottom: 2px solid {LIGHT_GREYSTONE};
         padding-bottom: 10px;
     }}
     
+    h3 {{
+        color: {BLACK} !important;
+    }}
+
     /* Button Styles */
     .stButton>button {{
         width: 100%;
         border-radius: 0px;
         height: 3.5em;
         background-color: {MAROON};
-        color: white;
+        color: white !important;
         font-weight: bold;
         border: none;
         text-transform: uppercase;
         letter-spacing: 1px;
-        transition: all 0.3s ease;
     }}
     .stButton>button:hover {{
         background-color: {DARK_GREYSTONE};
-        color: white;
-        border: none;
+        color: white !important;
     }}
     
     /* Status Box Styles */
     .status-box {{
         padding: 20px;
-        border-radius: 0px;
         border: 1px solid {GREYSTONE};
         border-left: 10px solid {MAROON};
         background-color: {LIGHT_GREYSTONE};
-        color: #333333;
+        color: {BLACK};
         font-family: 'Proxima Nova', sans-serif;
         margin-bottom: 25px;
     }}
     
-    /* Input Styling */
-    .stSelectbox label, .stFileUploader label {{
-        color: #333333;
-        font-weight: bold;
+    /* Input Label Styling */
+    label {{
+        color: {BLACK} !important;
+        font-weight: bold !important;
     }}
     
     hr {{
@@ -118,7 +126,6 @@ def setup_headless_driver():
     options.add_argument("--window-size=1920,1080")
     options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
     
-    # Path to Chromium installed by packages.txt on Streamlit Cloud
     options.binary_location = "/usr/bin/chromium"
     service = Service(executable_path="/usr/bin/chromedriver")
     
@@ -136,12 +143,11 @@ if uploaded_file and run_button:
     wb = load_workbook(filename=io.BytesIO(file_bytes))
     ws = wb.active 
     
-    # Header Detection (Checks Row 1, Column B)
+    # Header Detection
     first_cell_b = ws.cell(row=1, column=2).value
     start_row = 1
     try:
         if first_cell_b is not None:
-            # Check if Row 1 contains a course number; if not, it's a header
             int(str(first_cell_b).strip().split('-')[0])
             start_row = 1
         else:

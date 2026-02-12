@@ -50,12 +50,6 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
 
-    /* Button Text Color Fix (General) */
-    button p {{
-        color: {WHITE} !important;
-        font-weight: bold !important;
-    }}
-
     /* RUN BUTTON - Gray Background with White Text */
     div.stButton > button {{
         background-color: {DARK_GREYSTONE} !important;
@@ -85,17 +79,14 @@ st.markdown(f"""
         color: {WHITE} !important;
     }}
     
-    /* EXPLICITLY TARGETING BROWSE FILES TEXT */
-    section[data-testid="stFileUploader"] button div[data-testid="stMarkdownContainer"] p,
-    section[data-testid="stFileUploader"] button span,
-    section[data-testid="stFileUploader"] label {{
-        color: {WHITE} !important;
-    }}
-
-    /* Targeting the button label specifically */
+    /* THE FIX: Targeting the Browse Files button text specifically */
     section[data-testid="stFileUploader"] button {{
         color: {WHITE} !important;
         border: 1px solid {WHITE} !important;
+    }}
+    
+    section[data-testid="stFileUploader"] button * {{
+        color: {WHITE} !important;
     }}
 
     /* Ensure dropdown/selectbox text is also white */
@@ -116,7 +107,7 @@ st.markdown(f"""
 
 # --- HEADER ---
 st.markdown('<p class="massive-title">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions
@@ -226,7 +217,6 @@ if uploaded_file and run_button:
 
         status_card.success(f"Complete. {found_count} matches identified.")
         
-        # Download results
         output = io.BytesIO()
         wb.save(output)
         output.seek(0)

@@ -103,7 +103,7 @@ st.markdown(f"""
 
 # --- HEADER ---
 st.markdown('<p class="massive-title">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions

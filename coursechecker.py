@@ -38,11 +38,11 @@ st.markdown(f"""
         color: {BLACK};
     }}
     
-    /* Massive Single Line Title */
+    /* Massive Single Line Title - Set to 40pt */
     .title-text {{
         color: {MAROON};
         font-family: 'Crimson Text', serif;
-        font-size: 5rem; 
+        font-size: 40pt; 
         font-weight: bold;
         white-space: nowrap;
         margin-bottom: 0px;
@@ -50,21 +50,21 @@ st.markdown(f"""
         line-height: 1.1;
     }}
     
-    /* Credit Text */
+    /* Credit Text - Small under title */
     .credit-text {{
         color: {BLACK};
-        font-size: 1.2rem;
+        font-size: 0.9rem;
         margin-top: 0px;
         margin-bottom: 30px;
+        font-weight: normal;
     }}
     
-    /* File Uploader - Targeting internal button and text */
+    /* File Uploader - Maroon Background with White Text */
     section[data-testid="stFileUploader"] button {{
         background-color: {MAROON} !important;
         border: 1px solid {MAROON} !important;
     }}
     
-    /* Force 'Browse files' and file names to White within the uploader */
     section[data-testid="stFileUploader"] * {{
         color: {WHITE} !important;
     }}
@@ -79,20 +79,20 @@ st.markdown(f"""
     }}
 
     /* Run Button - White text on Gray Background */
-    .stButton>button {{
+    div.stButton > button {{
         width: 100%;
         border-radius: 4px;
         height: 3.5em;
-        background-color: {DARK_GREYSTONE};
+        background-color: {DARK_GREYSTONE} !important;
         color: {WHITE} !important;
-        font-weight: bold;
+        font-weight: bold !important;
         border: none;
         text-transform: uppercase;
         letter-spacing: 1px;
     }}
     
-    .stButton>button:hover {{
-        background-color: {GREYSTONE};
+    div.stButton > button:hover {{
+        background-color: {GREYSTONE} !important;
         color: {WHITE} !important;
     }}
 
@@ -124,7 +124,7 @@ st.markdown(f"""
 
 # --- HEADER SECTION ---
 st.markdown('<p class="title-text">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions
@@ -176,6 +176,7 @@ if uploaded_file and run_button:
     wb = load_workbook(filename=io.BytesIO(file_bytes))
     ws = wb.active 
     
+    # Automated Header Detection
     first_cell_b = ws.cell(row=1, column=2).value
     start_row = 1
     try:
@@ -228,6 +229,7 @@ if uploaded_file and run_button:
             time.sleep(2)
             page_content = driver.find_element(By.TAG_NAME, "body").text.lower()
             
+            # Update Column C
             if "no results found" not in page_content and clean_num in page_content:
                 ws.cell(row=row, column=3).value = "Y"
                 found_count += 1
@@ -239,6 +241,7 @@ if uploaded_file and run_button:
 
         status_card.success(f"Operation complete. {found_count} matches identified.")
         
+        # Download results
         output = io.BytesIO()
         wb.save(output)
         output.seek(0)

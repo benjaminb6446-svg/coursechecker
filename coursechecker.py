@@ -38,31 +38,43 @@ st.markdown(f"""
         color: {BLACK};
     }}
     
-    /* Single Line Title in Maroon */
+    /* Extra Large Single Line Title */
     .title-text {{
         color: {MAROON};
         font-family: 'Crimson Text', serif;
-        font-size: 2.5rem;
+        font-size: 3.5rem;
         font-weight: bold;
         white-space: nowrap;
         margin-bottom: 0px;
         padding-bottom: 0px;
+        line-height: 1.2;
     }}
     
     /* Credit Text */
     .credit-text {{
         color: {BLACK};
-        font-size: 0.8rem;
-        margin-top: -10px;
-        margin-bottom: 20px;
+        font-size: 1rem;
+        margin-top: -5px;
+        margin-bottom: 25px;
     }}
     
-    /* Button - Non-white background implies White text */
+    /* Dropdown/Selectbox - White text on Maroon Background */
+    div[data-baseweb="select"] > div {{
+        background-color: {MAROON} !important;
+        color: {WHITE} !important;
+    }}
+    
+    /* Ensure the text inside the dropdown is white */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {{
+        color: {WHITE} !important;
+    }}
+
+    /* Run Button - White text on Gray Background */
     .stButton>button {{
         width: 100%;
         border-radius: 4px;
         height: 3.5em;
-        background-color: {MAROON};
+        background-color: {DARK_GREYSTONE};
         color: {WHITE} !important;
         font-weight: bold;
         border: none;
@@ -71,11 +83,11 @@ st.markdown(f"""
     }}
     
     .stButton>button:hover {{
-        background-color: {DARK_GREYSTONE};
+        background-color: {GREYSTONE};
         color: {WHITE} !important;
     }}
 
-    /* Status Box - Non-white background (Maroon accent) implies White text */
+    /* Status Box - White text on Maroon Background */
     .status-box {{
         padding: 20px;
         border-radius: 4px;
@@ -103,7 +115,7 @@ st.markdown(f"""
 
 # --- HEADER SECTION ---
 st.markdown('<p class="title-text">UChicago Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">Developed by Ben B.</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions

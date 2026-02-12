@@ -32,11 +32,11 @@ st.markdown(f"""
         background-color: {WHITE};
     }}
 
-    /* MASSIVE TITLE - Forced size */
+    /* MASSIVE TITLE - Set to 40pt */
     .massive-title {{
         color: {MAROON} !important;
         font-family: 'Crimson Text', serif;
-        font-size: 50px !important;
+        font-size: 40pt !important;
         font-weight: 900 !important;
         line-height: 1.1;
         margin-top: -50px;
@@ -46,7 +46,7 @@ st.markdown(f"""
     
     .credit-text {{
         color: {BLACK} !important;
-        font-size: 1.1rem !important;
+        font-size: 0.9rem !important;
         margin-bottom: 30px;
     }}
 
@@ -56,9 +56,10 @@ st.markdown(f"""
         font-weight: bold !important;
     }}
 
-    /* RUN BUTTON - Gray */
+    /* RUN BUTTON - Gray Background with White Text */
     div.stButton > button {{
         background-color: {DARK_GREYSTONE} !important;
+        color: {WHITE} !important;
         border: none !important;
     }}
 
@@ -75,35 +76,39 @@ st.markdown(f"""
     /* FILE UPLOADER - Forced White Text for Drag/Drop and Browse */
     section[data-testid="stFileUploader"] {{
         background-color: {MAROON} !important;
-        padding: 10px;
+        padding: 15px;
         border-radius: 4px;
     }}
     
-    section[data-testid="stFileUploader"] label, 
-    section[data-testid="stFileUploader"] div, 
-    section[data-testid="stFileUploader"] small, 
-    section[data-testid="stFileUploader"] span {{
+    /* Target "Drag and drop file here" and "Limit 200MB..." */
+    section[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] p {{
+        color: {WHITE} !important;
+    }}
+    
+    /* Target the "Browse files" button text specifically */
+    section[data-testid="stFileUploader"] button p {{
         color: {WHITE} !important;
     }}
 
-    section[data-testid="stFileUploader"] button {{
-        background-color: {WHITE} !important;
+    /* Ensure dropdown/selectbox text is also white */
+    div[data-baseweb="select"] > div {{
+        background-color: {MAROON} !important;
     }}
     
-    section[data-testid="stFileUploader"] button p {{
-        color: {MAROON} !important;
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {{
+        color: {WHITE} !important;
     }}
     
-    /* Ensure all instruction text is black */
+    /* Standard Markdown text remains black */
     .stMarkdown, p, li, span {{
-        color: {BLACK} !important;
+        color: {BLACK};
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- HEADER ---
 st.markdown('<p class="massive-title">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions
@@ -213,7 +218,6 @@ if uploaded_file and run_button:
 
         status_card.success(f"Complete. {found_count} matches identified.")
         
-        # Download results
         output = io.BytesIO()
         wb.save(output)
         output.seek(0)

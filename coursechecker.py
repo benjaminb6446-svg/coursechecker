@@ -45,7 +45,7 @@ st.markdown(f"""
     }}
     
     .credit-text {{
-        color: {BLACK} !important;
+        color: {WHITE} !important;
         font-size: 1.1rem !important;
         margin-bottom: 30px;
     }}

@@ -42,7 +42,7 @@ st.markdown(f"""
     .title-text {{
         color: {MAROON};
         font-family: 'Crimson Text', serif;
-        font-size: 5rem; /* Massive size */
+        font-size: 5rem; 
         font-weight: bold;
         white-space: nowrap;
         margin-bottom: 0px;
@@ -58,19 +58,22 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
     
-    /* File Uploader Customization - White Text on Maroon */
+    /* File Uploader - Targeting internal button and text */
     section[data-testid="stFileUploader"] button {{
         background-color: {MAROON} !important;
-        color: {WHITE} !important;
+        border: 1px solid {MAROON} !important;
     }}
     
+    /* Force 'Browse files' and file names to White within the uploader */
+    section[data-testid="stFileUploader"] * {{
+        color: {WHITE} !important;
+    }}
+
     /* Dropdown/Selectbox - White text on Maroon Background */
     div[data-baseweb="select"] > div {{
         background-color: {MAROON} !important;
-        color: {WHITE} !important;
     }}
     
-    /* Ensure the text inside the dropdown is white */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * {{
         color: {WHITE} !important;
     }}
@@ -121,7 +124,7 @@ st.markdown(f"""
 
 # --- HEADER SECTION ---
 st.markdown('<p class="title-text">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions

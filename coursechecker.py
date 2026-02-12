@@ -21,7 +21,7 @@ st.set_page_config(
 # --- BRANDING & AGGRESSIVE CSS ---
 MAROON = "#800000"
 DARK_GREYSTONE = "#737373"
-PINK = "#FF69B4" 
+PINK = "#737373" 
 BLACK = "#000000"
 WHITE = "#FFFFFF"
 

@@ -38,24 +38,30 @@ st.markdown(f"""
         color: {BLACK};
     }}
     
-    /* Extra Large Single Line Title */
+    /* Massive Single Line Title */
     .title-text {{
         color: {MAROON};
         font-family: 'Crimson Text', serif;
-        font-size: 3.5rem;
+        font-size: 5rem; /* Massive size */
         font-weight: bold;
         white-space: nowrap;
         margin-bottom: 0px;
         padding-bottom: 0px;
-        line-height: 1.2;
+        line-height: 1.1;
     }}
     
     /* Credit Text */
     .credit-text {{
         color: {BLACK};
-        font-size: 1rem;
-        margin-top: -5px;
-        margin-bottom: 25px;
+        font-size: 1.2rem;
+        margin-top: 0px;
+        margin-bottom: 30px;
+    }}
+    
+    /* File Uploader Customization - White Text on Maroon */
+    section[data-testid="stFileUploader"] button {{
+        background-color: {MAROON} !important;
+        color: {WHITE} !important;
     }}
     
     /* Dropdown/Selectbox - White text on Maroon Background */
@@ -114,8 +120,8 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 # --- HEADER SECTION ---
-st.markdown('<p class="title-text">UChicago Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">Developed by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="title-text">Course Scheduler Checker</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions

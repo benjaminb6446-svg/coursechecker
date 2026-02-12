@@ -15,47 +15,68 @@ from openpyxl import load_workbook
 # --- PAGE CONFIG ---
 st.set_page_config(
     page_title="Course Availability Tool",
-    page_icon="🔍",
     layout="centered"
 )
 
-# --- CUSTOM CSS ---
-st.markdown("""
+# --- UCHICAGO BRANDING (Official Palette) ---
+MAROON = "#800000"
+LIGHT_GREYSTONE = "#D9D9D9"
+GREYSTONE = "#A6A6A6"
+DARK_GREYSTONE = "#737373"
+
+st.markdown(f"""
     <style>
-    .main {
-        background-color: #f8f9fa;
-    }
-    .stButton>button {
+    .main {{
+        background-color: #ffffff;
+    }}
+    h1 {{
+        color: {MAROON};
+        font-family: 'Crimson Text', serif;
+    }}
+    .stButton>button {{
         width: 100%;
-        border-radius: 4px;
-        height: 3em;
-        background-color: #800000;
+        border-radius: 0px;
+        height: 3.5em;
+        background-color: {MAROON};
         color: white;
         font-weight: bold;
         border: none;
-    }
-    .stButton>button:hover {
-        background-color: #a00000;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }}
+    .stButton>button:hover {{
+        background-color: {DARK_GREYSTONE};
         color: white;
-    }
-    .status-box {
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 5px solid #800000;
-        background-color: #ffffff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
+        border: none;
+    }}
+    .status-box {{
+        padding: 20px;
+        border-radius: 0px;
+        border-left: 10px solid {MAROON};
+        background-color: {LIGHT_GREYSTONE};
+        color: #333333;
+        font-family: 'Proxima Nova', sans-serif;
+        margin-bottom: 25px;
+    }}
+    hr {{
+        border-top: 2px solid {LIGHT_GREYSTONE};
+    }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- HEADER ---
 st.title("UChicago Course Scheduler Checker")
-st.markdown("Please use required formatting: Department in **Column A**, Course Number in **Column B**.")
+st.markdown(f"""
+**Instructions**
+* Upload an Excel file (.xlsx).
+* Please use required formatting: Department in **Column A**, Course Number in **Column B**.
+* The program will automatically check if Row 1 contains headers.
+* Results will be marked with a **'Y' in Column C**.
+""")
 st.divider()
 
-# --- MAIN INPUT AREA ---
-uploaded_file = st.file_uploader("Upload course list (.xlsx)", type="xlsx")
+# --- INPUT AREA ---
+uploaded_file = st.file_uploader("Upload course list", type="xlsx")
 
 input_col1, input_col2 = st.columns(2)
 with input_col1:
@@ -65,11 +86,11 @@ with input_col2:
 
 target_term = f"{quarter} {year}"
 
-st.markdown(" ") # Spacer
+st.markdown(" ") 
 run_button = st.button("Run Availability Check")
 st.divider()
 
-# --- FUNCTIONS ---
+# --- SELENIUM SETUP ---
 def setup_headless_driver():
     options = Options()
     options.add_argument("--headless=new")
@@ -90,7 +111,7 @@ def setup_headless_driver():
         alt_service = Service(executable_path="/usr/lib/chromium-browser/chromedriver")
         return webdriver.Chrome(service=alt_service, options=options)
 
-# --- EXECUTION LOGIC ---
+# --- MAIN LOGIC ---
 if uploaded_file and run_button:
     file_bytes = uploaded_file.read()
     wb = load_workbook(filename=io.BytesIO(file_bytes))
@@ -108,14 +129,12 @@ if uploaded_file and run_button:
     except (ValueError, TypeError):
         start_row = 2
 
-    # Status Displays
     status_card = st.empty()
     progress_bar = st.progress(0)
-    metric_col1, metric_col2 = st.columns(2)
-    found_metric = metric_col1.empty()
+    found_metric = st.empty()
     
     try:
-        status_card.markdown('<div class="status-box">Launching server-side browser...</div>', unsafe_allow_html=True)
+        status_card.markdown(f'<div class="status-box">Connecting to Academic Information System...</div>', unsafe_allow_html=True)
         driver = setup_headless_driver()
         wait = WebDriverWait(driver, 20)
         
@@ -140,9 +159,8 @@ if uploaded_file and run_button:
             query = f"{str(subj).strip()} {clean_num}"
             
             status_card.markdown(f'<div class="status-box">Checking: <b>{query}</b> (Row {row} of {total_rows})</div>', unsafe_allow_html=True)
-            found_metric.metric("Courses Found", found_count)
+            found_metric.markdown(f"**Matches identified:** `{found_count}`")
             
-            # PeopleSoft interaction
             search_bar = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "input.ps-edit")))
             search_bar.click()
             search_bar.send_keys(Keys.CONTROL + "a")
@@ -152,7 +170,6 @@ if uploaded_file and run_button:
             time.sleep(2)
             page_content = driver.find_element(By.TAG_NAME, "body").text.lower()
             
-            # Logic for Column C (index 3)
             if "no results found" not in page_content and clean_num in page_content:
                 ws.cell(row=row, column=3).value = "Y"
                 found_count += 1
@@ -164,7 +181,6 @@ if uploaded_file and run_button:
 
         status_card.success(f"Check complete. {found_count} matches identified.")
         
-        # Download preparation
         output = io.BytesIO()
         wb.save(output)
         output.seek(0)
@@ -179,9 +195,9 @@ if uploaded_file and run_button:
         driver.quit()
 
     except Exception as e:
-        st.error(f"Operation failed: {str(e)}")
+        st.error(f"Error: {str(e)}")
         if 'driver' in locals():
             driver.quit()
 
 elif not uploaded_file and run_button:
-    st.warning("Please upload an Excel file to begin.")
+    st.warning("Please upload a file to begin.")

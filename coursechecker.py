@@ -36,7 +36,7 @@ st.markdown(f"""
     .massive-title {{
         color: {MAROON} !important;
         font-family: 'Crimson Text', serif;
-        font-size: 60px !important; /* Explicit pixel size */
+        font-size: 60px !important;
         font-weight: 900 !important;
         line-height: 1.1;
         margin-top: -50px;
@@ -62,7 +62,7 @@ st.markdown(f"""
         border: none !important;
     }}
 
-    /* DOWNLOAD BUTTON - PINK (Aggressive Selection) */
+    /* DOWNLOAD BUTTON - PINK */
     div.stDownloadButton > button {{
         background-color: {PINK} !important;
         color: {WHITE} !important;
@@ -72,9 +72,26 @@ st.markdown(f"""
         text-transform: uppercase;
     }}
 
-    /* File Uploader styling */
-    section[data-testid="stFileUploader"] button {{
+    /* FILE UPLOADER - Forced White Text for Drag/Drop and Browse */
+    section[data-testid="stFileUploader"] {{
         background-color: {MAROON} !important;
+        padding: 10px;
+        border-radius: 4px;
+    }}
+    
+    section[data-testid="stFileUploader"] label, 
+    section[data-testid="stFileUploader"] div, 
+    section[data-testid="stFileUploader"] small, 
+    section[data-testid="stFileUploader"] span {{
+        color: {WHITE} !important;
+    }}
+
+    section[data-testid="stFileUploader"] button {{
+        background-color: {WHITE} !important;
+    }}
+    
+    section[data-testid="stFileUploader"] button p {{
+        color: {MAROON} !important;
     }}
     
     /* Ensure all instruction text is black */

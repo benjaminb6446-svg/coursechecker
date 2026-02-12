@@ -36,7 +36,7 @@ st.markdown(f"""
     .massive-title {{
         color: {MAROON} !important;
         font-family: 'Crimson Text', serif;
-        font-size: 60px !important;
+        font-size: 50px !important;
         font-weight: 900 !important;
         line-height: 1.1;
         margin-top: -50px;
@@ -45,7 +45,7 @@ st.markdown(f"""
     }}
     
     .credit-text {{
-        color: {WHITE} !important;
+        color: {BLACK} !important;
         font-size: 1.1rem !important;
         margin-bottom: 30px;
     }}

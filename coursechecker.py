@@ -14,7 +14,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from openpyxl import load_workbook
 
 # --- UI SETUP ---
-st.set_page_load_timeout(60)
 st.title("🎓 UChicago Course Scheduler Checker")
 st.markdown("""
 1. **Upload** your course list (.xlsx)
@@ -38,14 +37,20 @@ def setup_headless_driver():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--disable-gpu")
     options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    
+    # This installs Chrome on the Streamlit Server
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+    
+    # CORRECT PLACE FOR TIMEOUT
+    driver.set_page_load_timeout(60) 
+    return driver
 
 if uploaded_file and st.button("🔍 Check Courses"):
-    # Load Excel into memory
     wb = load_workbook(filename=io.BytesIO(uploaded_file.read()))
-    ws = wb.active # Assumes first sheet
+    ws = wb.active 
     
     progress_bar = st.progress(0)
     status_text = st.empty()
@@ -56,7 +61,6 @@ if uploaded_file and st.button("🔍 Check Courses"):
     try:
         driver.get("http://coursesearch92.ais.uchicago.edu/psc/prd92guest/EMPLOYEE/HRMS/c/UC_STUDENT_RECORDS_FL.UC_CLASS_SEARCH_FL.GBL")
         
-        # Select Term
         status_text.text(f"Setting term to {target_term}...")
         term_dropdown = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "select[id*='STRM']")))
         Select(term_dropdown).select_by_visible_text(target_term)
@@ -73,27 +77,25 @@ if uploaded_file and st.button("🔍 Check Courses"):
             query = f"{str(subj).strip()} {str(num).strip().split('-')[0]}"
             status_text.text(f"Searching: {query} ({row-1}/{rows_to_process-1})")
             
-            # Search logic
+            # Use ActionChains style or direct send_keys for headless
             search_bar = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "input.ps-edit")))
             search_bar.click()
-            search_bar.send_keys(Keys.COMMAND + "a")
+            search_bar.send_keys(Keys.CONTROL + "a") # Use Control for Linux servers
             search_bar.send_keys(Keys.DELETE)
             search_bar.send_keys(query + Keys.ENTER)
             
-            time.sleep(1.5)
+            time.sleep(2)
             page_text = driver.find_element(By.TAG_NAME, "body").text.lower()
             
-            # Check for result (Look for number in results to ensure it's not a 'no results' page)
             if "no results found" not in page_text and str(num).strip().split('-')[0] in page_text:
-                ws.cell(row=row, column=12).value = "Y" # Column L
+                ws.cell(row=row, column=12).value = "Y"
             else:
                 ws.cell(row=row, column=12).value = None
 
             progress_bar.progress((row - 1) / (rows_to_process - 1))
 
-        status_text.text("✅ Finished! Prepare for download...")
+        status_text.text("✅ Finished!")
         
-        # Prepare file for download
         output = io.BytesIO()
         wb.save(output)
         

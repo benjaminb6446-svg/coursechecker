@@ -21,7 +21,7 @@ st.set_page_config(
 # --- BRANDING & AGGRESSIVE CSS ---
 MAROON = "#800000"
 DARK_GREYSTONE = "#737373"
-GREYSTONE = "#A6A6A6"
+PINK = "#737373" 
 BLACK = "#000000"
 WHITE = "#FFFFFF"
 
@@ -44,68 +44,61 @@ st.markdown(f"""
         white-space: nowrap;
     }}
     
-    /* Credit Text */
     .credit-text {{
         color: {BLACK} !important;
         font-size: 0.9rem !important;
         margin-bottom: 30px;
     }}
 
-    /* Global Button Text Color Fix */
+    /* Button Text Color Fix (General) */
     button p {{
         color: {WHITE} !important;
         font-weight: bold !important;
     }}
 
-    /* RUN BUTTON - Regular Gray */
+    /* RUN BUTTON - Gray Background with White Text */
     div.stButton > button {{
         background-color: {DARK_GREYSTONE} !important;
         color: {WHITE} !important;
         border: none !important;
     }}
-    
-    div.stButton > button:hover {{
-        background-color: {GREYSTONE} !important;
-    }}
 
-    /* DOWNLOAD BUTTON - Regular Gray */
+    /* DOWNLOAD BUTTON - PINK */
     div.stDownloadButton > button {{
-        background-color: {DARK_GREYSTONE} !important;
+        background-color: {PINK} !important;
         color: {WHITE} !important;
         border: none !important;
         height: 4em !important;
         font-size: 1.2rem !important;
         text-transform: uppercase;
-        width: 100%;
-    }}
-    
-    div.stDownloadButton > button:hover {{
-        background-color: {GREYSTONE} !important;
     }}
 
-    /* FILE UPLOADER - Maroon Background, Hidden Button, Centered Text */
+    /* FILE UPLOADER - REINFORCED WHITE TEXT */
     section[data-testid="stFileUploader"] {{
         background-color: {MAROON} !important;
-        padding: 30px;
+        padding: 15px;
         border-radius: 4px;
-        display: flex;
-        justify-content: center;
     }}
     
-    /* Hide the Browse button */
-    section[data-testid="stFileUploader"] button {{
-        display: none !important;
-    }}
-
-    /* Center and color the Drag and Drop prompt */
+    /* Targets "Drag and drop file here" and "Limit 200MB..." */
     section[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] p {{
         color: {WHITE} !important;
-        text-align: center !important;
-        width: 100%;
-        font-size: 1.1rem;
+    }}
+    
+    /* EXPLICITLY TARGETING BROWSE FILES TEXT */
+    section[data-testid="stFileUploader"] button div[data-testid="stMarkdownContainer"] p,
+    section[data-testid="stFileUploader"] button span,
+    section[data-testid="stFileUploader"] label {{
+        color: {WHITE} !important;
     }}
 
-    /* Dropdown/Selectbox - Maroon Background with White Text */
+    /* Targeting the button label specifically */
+    section[data-testid="stFileUploader"] button {{
+        color: {WHITE} !important;
+        border: 1px solid {WHITE} !important;
+    }}
+
+    /* Ensure dropdown/selectbox text is also white */
     div[data-baseweb="select"] > div {{
         background-color: {MAROON} !important;
     }}
@@ -114,27 +107,27 @@ st.markdown(f"""
         color: {WHITE} !important;
     }}
     
-    /* Instructions and standard text in Black */
+    /* Standard Markdown text remains black */
     .stMarkdown, p, li, span {{
-        color: {BLACK} !important;
+        color: {BLACK};
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- HEADER ---
 st.markdown('<p class="massive-title">Course Scheduler Checker</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit-text">by Ben B.</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit-text">Developed by BB</p>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Instructions
-* **File Upload**: Drag and drop an Excel file (.xlsx) into the bar below.
+* **File Upload**: Provide an Excel file (.xlsx) for analysis.
 * **Required Formatting**: Ensure Department is in **Column A** and Course Number is in **Column B**.
 * **Results**: Available courses are marked with a **'Y' in Column C**.
 """)
 st.divider()
 
 # --- INPUT AREA ---
-uploaded_file = st.file_uploader("Upload course list", type="xlsx", label_visibility="collapsed")
+uploaded_file = st.file_uploader("Upload course list", type="xlsx")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -174,7 +167,6 @@ if uploaded_file and run_button:
     wb = load_workbook(filename=io.BytesIO(file_bytes))
     ws = wb.active 
     
-    # Header Detection
     first_cell_b = ws.cell(row=1, column=2).value
     start_row = 1
     try:
